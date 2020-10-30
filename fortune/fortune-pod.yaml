@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: fortune
+  labels:
+    app: fortune
+spec:
+  containers:
+  - name: html-generator
+    image: denbarkin/fortune:latest
+    resources:
+    volumeMounts:
+      - name: html
+        mountPath:  /var/htdocs
+  - name: web-server
+    image: nginx
+    volumeMounts:
+      - name: html
+        mountPath: /usr/share/nginx/html
+        readOnly: true
+    ports:
+    - containerPort: 80
+      protocol: TCP
+  volumes:
+    - name: html
+      emptyDir:
+        medium: Memory
